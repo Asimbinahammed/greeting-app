@@ -42,4 +42,12 @@ public class GreetingAppController {
         return greetingAppService.getAll();
     }
 
+    @PutMapping(value = "update/{id}")
+    public String updateMessage(
+            @PathVariable(value = "id") int id,
+            @RequestBody GreetingMessageDto greetingMessageDto
+    ){
+        return greetingAppService.updateGreeting(id, greetingMessageDto);
+    }
+
 }

@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 @Service
 public class GreetingAppService {
     private String MESSAGE_SAVED_SUCCESSFULLY = "Message saved successfully";
+    private String MESSAGE_UPDATED_SUCCESSFULLY = "Message updated successfully";
+
     @Autowired
     GreetingRepo greetingRepo;
 
@@ -44,5 +46,14 @@ public class GreetingAppService {
                     greetingMessageDto.setLastName(greetingMessageEntity.getLastName());
                     return greetingMessageDto;
                 }).collect(Collectors.toList());
+    }
+
+    public String updateGreeting(int id, GreetingMessageDto greetingMessageDto) {
+        GreetingMessageEntity greetingMessageEntity = greetingRepo.getById(id);
+        greetingMessageEntity.setGreetingMessage(greetingMessageDto.getGreetingMessage());
+        greetingMessageEntity.setFirstName(greetingMessageDto.getFirstName());
+        greetingMessageEntity.setLastName(greetingMessageDto.getLastName());
+        greetingRepo.save(greetingMessageEntity);
+        return MESSAGE_UPDATED_SUCCESSFULLY;
     }
 }
