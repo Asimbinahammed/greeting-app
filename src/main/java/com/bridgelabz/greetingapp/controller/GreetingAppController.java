@@ -1,11 +1,12 @@
 package com.bridgelabz.greetingapp.controller;
 
-import com.bridgelabz.greetingapp.dto.NameDto;
-import com.bridgelabz.greetingapp.services.GreetingAppService;
+import com.bridgelabz.greetingapp.dto.GreetingMessageDto;
+import com.bridgelabz.greetingapp.service.GreetingAppService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping(value = "/app")
 public class GreetingAppController {
 
     @Autowired
@@ -13,26 +14,18 @@ public class GreetingAppController {
 
     @GetMapping(value = "/greeting")
     public String greetingMessage(){
-        return "Welcome";
+        return "Hello world";
     }
 
-    @GetMapping(value = "/greeting1/{name}")
-    public String greetingMessageWithPathVariable(@PathVariable String name){
-        return "Welcome " + name;
-    }
 
-    @GetMapping(value = "/greeting2")
-    public String greetingMessageWithPassingParameters(@RequestParam(value = "name") String name){
-        return "Welcome " + name;
-    }
-
-    @GetMapping(value = "/greeting3")
+    @GetMapping(value = "/")
     public String greetingMessageFromServiceClass(){
         return greetingAppService.getMessage();
     }
 
-    @GetMapping(value = "/greeting4")
-    public String greetingMessageWithFirstNameAndlastName(@RequestBody NameDto name){
-        return greetingAppService.getMessage() + " , " + name.getFirstName() + " " + name.getLastName();
+    @PostMapping(value = "/add")
+    public String addMessage(@RequestBody GreetingMessageDto greetingMessageDto) {
+        return greetingAppService.addGreeting(greetingMessageDto);
     }
+
 }
