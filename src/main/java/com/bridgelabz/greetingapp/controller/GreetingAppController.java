@@ -1,9 +1,12 @@
 package com.bridgelabz.greetingapp.controller;
 
 import com.bridgelabz.greetingapp.dto.GreetingMessageDto;
+import com.bridgelabz.greetingapp.entity.GreetingMessageEntity;
 import com.bridgelabz.greetingapp.service.GreetingAppService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/app")
@@ -26,6 +29,11 @@ public class GreetingAppController {
     @PostMapping(value = "/add")
     public String addMessage(@RequestBody GreetingMessageDto greetingMessageDto) {
         return greetingAppService.addGreeting(greetingMessageDto);
+    }
+
+    @GetMapping(value = "/find/{id}")
+    public Optional<GreetingMessageEntity> findMessage(@PathVariable(value = "id")int id){
+        return greetingAppService.findMessage(id);
     }
 
 }

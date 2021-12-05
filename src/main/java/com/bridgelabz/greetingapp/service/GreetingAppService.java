@@ -6,6 +6,8 @@ import com.bridgelabz.greetingapp.repository.GreetingRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class GreetingAppService {
     private String MESSAGE_SAVED_SUCCESSFULLY = "Message saved successfully";
@@ -23,5 +25,9 @@ public class GreetingAppService {
 
     public String getMessage() {
         return "hello wold!";
+    }
+
+    public Optional<GreetingMessageEntity> findMessage(int id) {
+        return greetingRepo.findById(id);
     }
 }
