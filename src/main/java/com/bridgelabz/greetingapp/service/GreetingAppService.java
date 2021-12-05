@@ -6,7 +6,9 @@ import com.bridgelabz.greetingapp.repository.GreetingRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class GreetingAppService {
@@ -29,5 +31,18 @@ public class GreetingAppService {
 
     public Optional<GreetingMessageEntity> findMessage(int id) {
         return greetingRepo.findById(id);
+    }
+
+    public List<GreetingMessageDto> getAll() {
+        return greetingRepo
+                .findAll()
+                .stream()
+                .map(greetingMessageEntity->{
+                    GreetingMessageDto greetingMessageDto = new GreetingMessageDto();
+                    greetingMessageDto.setGreetingMessage(greetingMessageEntity.getGreetingMessage());
+                    greetingMessageDto.setFirstName(greetingMessageEntity.getFirstName());
+                    greetingMessageDto.setLastName(greetingMessageEntity.getLastName());
+                    return greetingMessageDto;
+                }).collect(Collectors.toList());
     }
 }

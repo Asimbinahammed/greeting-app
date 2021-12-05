@@ -6,6 +6,7 @@ import com.bridgelabz.greetingapp.service.GreetingAppService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -34,6 +35,11 @@ public class GreetingAppController {
     @GetMapping(value = "/find/{id}")
     public Optional<GreetingMessageEntity> findMessage(@PathVariable(value = "id")int id){
         return greetingAppService.findMessage(id);
+    }
+
+    @GetMapping(value = "get-all")
+    public List<GreetingMessageDto> getAll(){
+        return greetingAppService.getAll();
     }
 
 }
