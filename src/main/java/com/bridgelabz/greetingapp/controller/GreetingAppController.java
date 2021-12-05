@@ -27,6 +27,21 @@ public class GreetingAppController {
         return "Hello world";
     }
 
+    @GetMapping("/greeting2/{name}")
+    public String greetingUsingGetMethod(
+            @PathVariable String name
+    ) {
+        return "Welcome " + name ;
+    }
+
+    @GetMapping("/greeting3")
+    public String getMessageUsingQueryParameter(
+            @RequestParam String firstName,
+            @RequestParam String lastName
+    ) {
+        return greetingAppService.getMessage() + " , " + firstName + " " + lastName;
+    }
+
     @GetMapping(value = "/")
     public String greetingMessageFromServiceClass() {
         return greetingAppService.getMessage();

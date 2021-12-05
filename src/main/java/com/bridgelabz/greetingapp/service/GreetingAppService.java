@@ -23,6 +23,8 @@ public class GreetingAppService {
     private final String MESSAGE_SAVED_SUCCESSFULLY = "Message saved successfully";
     private final String MESSAGE_UPDATED_SUCCESSFULLY = "Message updated successfully";
     private final String MESSAGE_DELETED_SUCCESSFULLY = "Message deleted successfully";
+    private final String NO_MESSAGE_FOUND_FOR_THIS_ID = "Message cannot updated. No such ID found";
+    private final String MESSAGE_NOT_FOUND = "Message cannot deleted. No such ID found";
 
     /**
      * Purpose : To return string greeting message whenever this method is called
@@ -79,12 +81,16 @@ public class GreetingAppService {
      * @return String : Success message if updated the entry
      */
     public String updateGreeting(int id, GreetingMessageDto greetingMessageDto) {
-        GreetingMessageEntity greetingMessageEntity = greetingRepo.getById(id);
-        greetingMessageEntity.setGreetingMessage(greetingMessageDto.getGreetingMessage());
-        greetingMessageEntity.setFirstName(greetingMessageDto.getFirstName());
-        greetingMessageEntity.setLastName(greetingMessageDto.getLastName());
-        greetingRepo.save(greetingMessageEntity);
-        return MESSAGE_UPDATED_SUCCESSFULLY;
+        Optional<GreetingMessageEntity> greetingMessageById = greetingRepo.findById(id);
+        if (greetingMessageById.isPresent()) {
+            GreetingMessageEntity greetingMessageEntity = greetingMessageById.get();
+            greetingMessageEntity.setFirstName(greetingMessageDto.getFirstName());
+            greetingMessageEntity.setLastName(greetingMessageDto.getLastName());
+            greetingMessageEntity.setGreetingMessage(greetingMessageDto.getGreetingMessage());
+            greetingRepo.save(greetingMessageEntity);
+            return MESSAGE_UPDATED_SUCCESSFULLY;
+        }
+        return NO_MESSAGE_FOUND_FOR_THIS_ID;
     }
 
     /**
@@ -93,7 +99,11 @@ public class GreetingAppService {
      * @return String : Success message if deleted the entry
      */
     public String deleteMessage(int id) {
-        greetingRepo.deleteById(id);
-        return MESSAGE_DELETED_SUCCESSFULLY;
+        Optional<GreetingMessageEntity> greetingMessage = greetingRepo.findById(id);
+        if (greetingMessage.isPresent()) {
+            greetingRepo.delete(greetingMessage.get());
+            return MESSAGE_DELETED_SUCCESSFULLY;
+        }
+        return MESSAGE_NOT_FOUND;
     }
 }
