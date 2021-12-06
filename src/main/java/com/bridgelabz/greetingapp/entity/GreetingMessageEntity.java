@@ -5,7 +5,7 @@ import lombok.Setter;
 import javax.persistence.*;
 
 /**
- * Purpose : To contains the entities in the database
+ * Purpose : Identifying the static structure of objects in the system
  *
  * @author ASIM AHAMMED
  * @version : 0.0.1-SNAPSHOT

@@ -5,6 +5,13 @@ import lombok.Setter;
 
 import java.util.Date;
 
+/**
+ * purpose : Defining error details
+ *
+ * @author ASIM AHAMMED
+ * @version : 0.0.1-SNAPSHOT
+ * @since 2021-12-03
+ */
 @Getter
 @Setter
 public class ErrorDetails {

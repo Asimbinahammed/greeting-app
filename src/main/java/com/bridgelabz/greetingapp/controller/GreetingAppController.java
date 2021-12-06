@@ -5,6 +5,7 @@ import com.bridgelabz.greetingapp.entity.GreetingMessageEntity;
 import com.bridgelabz.greetingapp.service.GreetingAppService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -27,19 +28,19 @@ public class GreetingAppController {
         return "Hello world";
     }
 
-    @GetMapping("/greeting2/{name}")
+    @PostMapping("/greeting2/{name}")
     public String greetingUsingGetMethod(
             @PathVariable String name
     ) {
-        return "Welcome " + name ;
+        return "Welcome " + name;
     }
 
-    @GetMapping("/greeting3")
+    @PostMapping("/greeting3")
     public String getMessageUsingQueryParameter(
-            @RequestParam String firstName,
-            @RequestParam String lastName
+            @RequestParam(value = "firstName") String firstName,
+            @RequestParam(value = "lastName") String lastName
     ) {
-        return greetingAppService.getMessage() + " , " + firstName + " " + lastName;
+        return greetingAppService.getMessage() + ", " + firstName + " " + lastName;
     }
 
     @GetMapping(value = "/")
