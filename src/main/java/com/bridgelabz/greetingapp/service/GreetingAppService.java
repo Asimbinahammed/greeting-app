@@ -2,7 +2,9 @@ package com.bridgelabz.greetingapp.service;
 
 import com.bridgelabz.greetingapp.dto.GreetingMessageDto;
 import com.bridgelabz.greetingapp.entity.GreetingMessageEntity;
+import com.bridgelabz.greetingapp.exception.ResourceNotFoundException;
 import com.bridgelabz.greetingapp.repository.GreetingRepo;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -20,11 +22,12 @@ import java.util.stream.Collectors;
 public class GreetingAppService {
     @Autowired
     GreetingRepo greetingRepo;
+    @Autowired
+    ModelMapper modelMapper;
+
     private final String MESSAGE_SAVED_SUCCESSFULLY = "Message saved successfully";
     private final String MESSAGE_UPDATED_SUCCESSFULLY = "Message updated successfully";
     private final String MESSAGE_DELETED_SUCCESSFULLY = "Message deleted successfully";
-    private final String NO_MESSAGE_FOUND_FOR_THIS_ID = "Message cannot updated. No such ID found";
-    private final String MESSAGE_NOT_FOUND = "Message cannot deleted. No such ID found";
 
     /**
      * Purpose : To return string greeting message whenever this method is called
@@ -40,10 +43,7 @@ public class GreetingAppService {
      * @return String : Message for success.
      */
     public String addGreeting(GreetingMessageDto greetingMessageDto) {
-        GreetingMessageEntity greetingMessageEntity = new GreetingMessageEntity();
-        greetingMessageEntity.setFirstName(greetingMessageDto.getFirstName());
-        greetingMessageEntity.setLastName(greetingMessageDto.getLastName());
-        greetingMessageEntity.setGreetingMessage(greetingMessageDto.getGreetingMessage());
+        GreetingMessageEntity greetingMessageEntity = modelMapper.map(greetingMessageDto, GreetingMessageEntity.class);
         greetingRepo.save(greetingMessageEntity);
         return MESSAGE_SAVED_SUCCESSFULLY;
     }
@@ -66,10 +66,8 @@ public class GreetingAppService {
                 .findAll()
                 .stream()
                 .map(greetingMessageEntity -> {
-                    GreetingMessageDto greetingMessageDto = new GreetingMessageDto();
-                    greetingMessageDto.setGreetingMessage(greetingMessageEntity.getGreetingMessage());
-                    greetingMessageDto.setFirstName(greetingMessageEntity.getFirstName());
-                    greetingMessageDto.setLastName(greetingMessageEntity.getLastName());
+                    GreetingMessageDto greetingMessageDto =
+                            modelMapper.map(greetingMessageEntity, GreetingMessageDto.class);
                     return greetingMessageDto;
                 }).collect(Collectors.toList());
     }
@@ -84,13 +82,11 @@ public class GreetingAppService {
         Optional<GreetingMessageEntity> greetingMessageById = greetingRepo.findById(id);
         if (greetingMessageById.isPresent()) {
             GreetingMessageEntity greetingMessageEntity = greetingMessageById.get();
-            greetingMessageEntity.setFirstName(greetingMessageDto.getFirstName());
-            greetingMessageEntity.setLastName(greetingMessageDto.getLastName());
-            greetingMessageEntity.setGreetingMessage(greetingMessageDto.getGreetingMessage());
+            modelMapper.map(greetingMessageDto, greetingMessageEntity);
             greetingRepo.save(greetingMessageEntity);
             return MESSAGE_UPDATED_SUCCESSFULLY;
         }
-        return NO_MESSAGE_FOUND_FOR_THIS_ID;
+        throw new ResourceNotFoundException("User not found");
     }
 
     /**
@@ -104,6 +100,6 @@ public class GreetingAppService {
             greetingRepo.delete(greetingMessage.get());
             return MESSAGE_DELETED_SUCCESSFULLY;
         }
-        return MESSAGE_NOT_FOUND;
+        throw new ResourceNotFoundException("User not found");
     }
 }
